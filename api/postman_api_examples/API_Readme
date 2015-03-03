@@ -1,0 +1,83 @@
+Example Curl calls:
+
+
+##### Get Neighbor State Info
+
+curl -i -X GET http://127.0.0.1:8080/v1/bgp/neighbor/172.16.86.134
+
+##### Get all Remote Routes (Destinations)
+
+curl -i -X GET http://172.16.86.135:8080/v1/bgp/routes
+
+##### Get all Remote Routes (Destinations)
+
+curl -i -X GET http://127.0.0.1:8080/v1/bgp/routes
+
+##### Get Local_RIB from a Peer (Destinations)
+
+curl -i -X GET http://127.0.0.1:8080/v1/bgp/neighbor/172.16.86.134/local-rib
+
+##### Get Remote Destination Prefixes
+
+curl -i -X GET http://127.0.0.1:8080/v1/bgp/routes/local-rib
+
+##### Add a Route
+
+curl -X "POST" "http://172.16.86.1:8080/v1/bgp/routes/add" \
+	-d $'{
+	"ip_prefix": "1.1.1.1",
+	"ip_nexthop": "172.16.86.13",
+	"ip_mask": 32,
+	"source_as": 7675,
+	"route_family": "RF_IPv4_UC"
+}'
+
+##### Add a Route
+
+curl -X "POST" "http://172.16.86.135:8080/v1/bgp/routes/add" \
+	-d $'{
+	"ip_prefix": "2.2.2.2",
+	"ip_nexthop": "172.16.86.13",
+	"ip_mask": 32,
+	"source_as": 7675,
+	"route_family": "RF_IPv4_UC"
+}'
+
+
+##### Add a Route w/ an Opaque Community
+
+curl -X "POST" "http://172.16.86.135:8080/v1/bgp/routes/add" \
+	-d $'{
+	"ip_prefix": "2.2.2.2",
+	"ip_nexthop": "172.16.86.13",
+	"ip_mask": 32,
+	"source_as": 7675,
+	"extended_community": "POLICY"
+}'
+
+##### Add add a neighbor
+
+curl -X "POST" "http://127.0.0.1:8080/v1/bgp/neighbor/add" \
+	-d $'{
+  "neighbor_as":7675,
+  "neighbor_ip":"172.16.86.135"
+}'
+
+
+##### Add a Neighbor and a Route
+
+
+curl -X "POST" "http://127.0.0.1:8080/v1/bgp/neighbor/add" \
+	-d $'{
+  "neighbor_as":7675,
+  "neighbor_ip":"172.16.86.135"
+}'
+
+curl -X "POST" "http://172.16.86.1:8080/v1/bgp/routes/add" \
+	-d $'{
+	"ip_prefix": "2.2.2.2",
+	"ip_nexthop": "172.16.86.13",
+	"ip_mask": 32,
+	"source_as": 7675,
+	"route_family": "RF_IPv4_UC"
+}'

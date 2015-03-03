@@ -22,3 +22,17 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Intellij
+.idea/
+*.iml
+
+# Project-Specific
+*.cover.out
+coverage.out
+
+# OS generated files
+.DS_Store
+
+# Project binary
+gopher-net

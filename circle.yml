@@ -1,0 +1,33 @@
+machine:
+  services:
+    - docker
+  environment:
+    DOCKER_IP: "127.0.0.1"
+    GOPATH: "/home/ubuntu/.go_workspace"
+    ORG_PATH: "github.com/gopher-net/"
+    REPO_PATH: "${ORG_PATH}/go-bgpd"
+
+dependencies:
+  override:
+    - rm -rf ${GOPATH}/src/${REPO_PATH}
+    - mkdir -p ${GOPATH}/src/${ORG_PATH}
+    - cp -r ../go-bgpd ${GOPATH}/src/${ORG_PATH}
+    - mkdir -p ${CIRCLE_ARTIFACTS}/coverage
+    - go get github.com/mattn/goveralls
+
+test:
+  pre:
+    - go get -d ./...:
+        pwd: ../.go_workspace/src/${REPO_PATH}
+  override:
+    - make build:
+        pwd: ../.go_workspace/src/${REPO_PATH}
+    - make test-all:
+        pwd: ../.go_workspace/src/${REPO_PATH}
+  post:
+    - sh tools/combine-coverage.sh:
+        pwd: ../.go_workspace/src/${REPO_PATH}
+    - go tool cover -html=coverage.out -o $CIRCLE_ARTIFACTS/coverage/index.html:
+        pwd: ../.go_workspace/src/${REPO_PATH}
+#    - goveralls -coverprofile=coverage.out -service=circleci -repotoken $COVERALLS_TOKEN:
+#        pwd: ../.go_workspace/src/${REPO_PATH}
